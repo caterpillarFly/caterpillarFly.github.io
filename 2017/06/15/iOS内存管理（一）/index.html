@@ -93,12 +93,16 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="浮生若梦">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="引用计数顾名思义，引用计数是指内存管理中对引用采用计数的技术。 对于引用计数，我们很自然的联想到“某处有某物多少多少”而将注意力放在计数上。但更客观、正确的思考方式是：  自己生成的对象，自己持有  非自己生成的对象，自己也能持有  不再需要自己持有的对象时自己释放  非自己持有的对象无法释放   上面出现了”生成“、”持有“、”释放“三个词，而在Object-C内存管理中，还应该加上”废弃“一词">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS内存管理（一）">
+<meta property="og:url" content="http://yoursite.com/2017/06/15/iOS内存管理（一）/index.html">
 <meta property="og:site_name" content="浮生若梦">
+<meta property="og:description" content="引用计数顾名思义，引用计数是指内存管理中对引用采用计数的技术。 对于引用计数，我们很自然的联想到“某处有某物多少多少”而将注意力放在计数上。但更客观、正确的思考方式是：  自己生成的对象，自己持有  非自己生成的对象，自己也能持有  不再需要自己持有的对象时自己释放  非自己持有的对象无法释放   上面出现了”生成“、”持有“、”释放“三个词，而在Object-C内存管理中，还应该加上”废弃“一词">
+<meta property="og:updated_time" content="2017-06-29T07:48:33.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="浮生若梦">
+<meta name="twitter:title" content="iOS内存管理（一）">
+<meta name="twitter:description" content="引用计数顾名思义，引用计数是指内存管理中对引用采用计数的技术。 对于引用计数，我们很自然的联想到“某处有某物多少多少”而将注意力放在计数上。但更客观、正确的思考方式是：  自己生成的对象，自己持有  非自己生成的对象，自己也能持有  不再需要自己持有的对象时自己释放  非自己持有的对象无法释放   上面出现了”生成“、”持有“、”释放“三个词，而在Object-C内存管理中，还应该加上”废弃“一词">
 
 
 
@@ -126,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/06/15/iOS内存管理（一）/"/>
 
 
 
 
 
-  <title>浮生若梦</title>
+  <title>iOS内存管理（一） | 浮生若梦</title>
   
 
 
@@ -157,9 +161,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-   page-home 
- ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -252,9 +254,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -280,9 +282,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/06/15/iOS内存管理（一）/" itemprop="url">iOS内存管理（一）</a></h1>
+          <h1 class="post-title" itemprop="name headline">iOS内存管理（一）</h1>
         
 
         <div class="post-meta">
@@ -340,9 +340,7 @@
       
 
       
-        
-          
-            <h1 id="引用计数"><a href="#引用计数" class="headerlink" title="引用计数"></a>引用计数</h1><p>顾名思义，引用计数是指内存管理中对引用采用计数的技术。 对于引用计数，我们很自然的联想到“某处有某物多少多少”而将注意力放在计数上。但更客观、正确的思考方式是：</p>
+        <h1 id="引用计数"><a href="#引用计数" class="headerlink" title="引用计数"></a>引用计数</h1><p>顾名思义，引用计数是指内存管理中对引用采用计数的技术。 对于引用计数，我们很自然的联想到“某处有某物多少多少”而将注意力放在计数上。但更客观、正确的思考方式是：</p>
 <ol>
 <li><p>自己生成的对象，自己持有</p>
 </li>
@@ -407,20 +405,27 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">id obj1 = [[NSObject alloc] init];</div><div class="line">//自己持有的对象，自己进行释放</div><div class="line">[obj1 release];</div><div class="line"></div><div class="line">id obj2 = [obj0 object];</div><div class="line">//非自己持有的对象，进行释放，后果Crash...</div><div class="line">[obj2 release];</div></pre></td></tr></table></figure>
 <p>以上四项内容就是引用计数的思考方式，接下来会介绍在ARC下，这些规则会有哪些变化。</p>
 
-          
+      
+    </div>
+
+    <div>
+      
         
+
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
     <div>
+      
+        
+
       
     </div>
 
@@ -428,21 +433,22 @@
       
 
       
+      
+      
 
       
 
       
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -450,6 +456,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -469,8 +479,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpg"
@@ -514,6 +533,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引用计数"><span class="nav-number">1.</span> <span class="nav-text">引用计数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自己生成的对象，自己持有"><span class="nav-number">2.</span> <span class="nav-text">自己生成的对象，自己持有</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#非自己生成的对象，自己也能持有"><span class="nav-number">3.</span> <span class="nav-text">非自己生成的对象，自己也能持有</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#不在需要自己持有的对象时释放"><span class="nav-number">4.</span> <span class="nav-text">不在需要自己持有的对象时释放</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#无法释放非自己持有的对象"><span class="nav-number">5.</span> <span class="nav-text">无法释放非自己持有的对象</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -634,10 +669,10 @@
 
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
 
-  
+
 
   
 
