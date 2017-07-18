@@ -99,7 +99,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/07/08/iOS内存管理（二）/index.html">
 <meta property="og:site_name" content="浮生若梦">
 <meta property="og:description" content="概要ARC，即Automatic Reference Counting，字面意思“自动引用计数”， ARC只是自动的帮助我们处理“引用计数”相关的部分。关于引用计数的思考方式并没有发生变化，只是在源码的表述上稍有不同，发生了什么变化呢？首先要理解ARC中追加的所有权声明。 所有权修饰符OC中，为了处理对象，将变量定义为id类型或各种对象类型，比如id，NSObject *等。在ARC有效时，OC对">
-<meta property="og:updated_time" content="2017-07-18T06:45:44.000Z">
+<meta property="og:updated_time" content="2017-07-18T06:57:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS内存管理（二）">
 <meta name="twitter:description" content="概要ARC，即Automatic Reference Counting，字面意思“自动引用计数”， ARC只是自动的帮助我们处理“引用计数”相关的部分。关于引用计数的思考方式并没有发生变化，只是在源码的表述上稍有不同，发生了什么变化呢？首先要理解ARC中追加的所有权声明。 所有权修饰符OC中，为了处理对象，将变量定义为id类型或各种对象类型，比如id，NSObject *等。在ARC有效时，OC对">
@@ -387,8 +387,6 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">id __weak obj1 = obj0;</div><div class="line">id __autoreleasing tmp = obj1;</div><div class="line">NSLog(@&quot;class=%@&quot;,[tmp class]);</div></pre></td></tr></table></figure>
 <p>但实际试验结果和书上所说有所出入，如果把两段代码放入@autoreleasePool{}里面，然后打印Pool的信      息，就会发现下面的代码，池子里面包含了对象obj0，但是上面的代码则没有包含。所以访问__weak变量，实际上必定访问注册到autoreleasePool中的对象，对此持保留态度。</p>
 </li>
-</ol>
-<ol>
 <li><p>我们一般都是这样使用：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@autoreleasepool &#123;</div><div class="line">    id obj = [[NSObject alloc] init];</div><div class="line">     id mArray = [NSMutableArray array];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>经过上面讲述的优化过程，知道obj和mArray并不会注册到autoreleasePool中，打印Pool信息，也确实没发现这两个对象。既然没注册到Pool里面，那么外面的@autoreleasepool{}块还有用吗？</p>
