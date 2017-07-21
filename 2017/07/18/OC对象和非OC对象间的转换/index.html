@@ -93,16 +93,16 @@
 
 
 
-<meta name="description" content="前言这两篇博文是阅读《iOS与OS X多线程和内存管理》之后整理得来的，有错误之处，请指正！ 引用计数顾名思义，引用计数是指内存管理中对引用采用计数的技术。 对于引用计数，我们很自然的联想到“某处有某物多少多少”而将注意力放在计数上。但更客观、正确的思考方式是：  自己生成的对象，自己持有  非自己生成的对象，自己也能持有  不再需要自己持有的对象时自己释放  非自己持有的对象无法释放   上面出">
+<meta name="description" content="简介Core Foundation框架，是一组由C语言编写的接口，它所使用的对象，称之为Core Foundation对象，也是使用引用计数。CF对象与OC对象的区别很小，且可以混合使用。Foundation框架的API生成的对象，可以用Core Foundataion框架的API释放，反之亦然。 内存管理Core Foundation框架提供了一下几个函数来进行内存管理，CFBridgingRe">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iOS内存管理（一）">
-<meta property="og:url" content="http://yoursite.com/2017/06/15/iOS内存管理（一）/index.html">
+<meta property="og:title" content="OC对象和Core Foundation对象间的转换">
+<meta property="og:url" content="http://yoursite.com/2017/07/18/OC对象和非OC对象间的转换/index.html">
 <meta property="og:site_name" content="浮生若梦">
-<meta property="og:description" content="前言这两篇博文是阅读《iOS与OS X多线程和内存管理》之后整理得来的，有错误之处，请指正！ 引用计数顾名思义，引用计数是指内存管理中对引用采用计数的技术。 对于引用计数，我们很自然的联想到“某处有某物多少多少”而将注意力放在计数上。但更客观、正确的思考方式是：  自己生成的对象，自己持有  非自己生成的对象，自己也能持有  不再需要自己持有的对象时自己释放  非自己持有的对象无法释放   上面出">
-<meta property="og:updated_time" content="2017-07-18T06:45:46.000Z">
+<meta property="og:description" content="简介Core Foundation框架，是一组由C语言编写的接口，它所使用的对象，称之为Core Foundation对象，也是使用引用计数。CF对象与OC对象的区别很小，且可以混合使用。Foundation框架的API生成的对象，可以用Core Foundataion框架的API释放，反之亦然。 内存管理Core Foundation框架提供了一下几个函数来进行内存管理，CFBridgingRe">
+<meta property="og:updated_time" content="2017-07-21T07:27:24.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iOS内存管理（一）">
-<meta name="twitter:description" content="前言这两篇博文是阅读《iOS与OS X多线程和内存管理》之后整理得来的，有错误之处，请指正！ 引用计数顾名思义，引用计数是指内存管理中对引用采用计数的技术。 对于引用计数，我们很自然的联想到“某处有某物多少多少”而将注意力放在计数上。但更客观、正确的思考方式是：  自己生成的对象，自己持有  非自己生成的对象，自己也能持有  不再需要自己持有的对象时自己释放  非自己持有的对象无法释放   上面出">
+<meta name="twitter:title" content="OC对象和Core Foundation对象间的转换">
+<meta name="twitter:description" content="简介Core Foundation框架，是一组由C语言编写的接口，它所使用的对象，称之为Core Foundation对象，也是使用引用计数。CF对象与OC对象的区别很小，且可以混合使用。Foundation框架的API生成的对象，可以用Core Foundataion框架的API释放，反之亦然。 内存管理Core Foundation框架提供了一下几个函数来进行内存管理，CFBridgingRe">
 
 
 
@@ -130,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/06/15/iOS内存管理（一）/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/07/18/OC对象和非OC对象间的转换/"/>
 
 
 
 
 
-  <title>iOS内存管理（一） | 浮生若梦</title>
+  <title>OC对象和Core Foundation对象间的转换 | 浮生若梦</title>
   
 
 
@@ -265,7 +265,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/15/iOS内存管理（一）/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/18/OC对象和非OC对象间的转换/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="浮生若梦">
@@ -282,7 +282,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">iOS内存管理（一）</h1>
+          <h1 class="post-title" itemprop="name headline">OC对象和Core Foundation对象间的转换</h1>
         
 
         <div class="post-meta">
@@ -294,8 +294,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-15T16:43:18+08:00">
-                2017-06-15
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-18T19:47:05+08:00">
+                2017-07-18
               </time>
             
 
@@ -312,7 +312,7 @@
 
           
           
-             <span id="/2017/06/15/iOS内存管理（一）/" class="leancloud_visitors" data-flag-title="iOS内存管理（一）">
+             <span id="/2017/07/18/OC对象和非OC对象间的转换/" class="leancloud_visitors" data-flag-title="OC对象和Core Foundation对象间的转换">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -340,74 +340,30 @@
       
 
       
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这两篇博文是阅读《iOS与OS X多线程和内存管理》之后整理得来的，有错误之处，请指正！</p>
-<h1 id="引用计数"><a href="#引用计数" class="headerlink" title="引用计数"></a>引用计数</h1><p>顾名思义，引用计数是指内存管理中对引用采用计数的技术。 对于引用计数，我们很自然的联想到“某处有某物多少多少”而将注意力放在计数上。但更客观、正确的思考方式是：</p>
-<ol>
-<li><p>自己生成的对象，自己持有</p>
-</li>
-<li><p>非自己生成的对象，自己也能持有</p>
-</li>
-<li><p>不再需要自己持有的对象时自己释放</p>
-</li>
-<li><p>非自己持有的对象无法释放</p>
-</li>
-</ol>
-<p>上面出现了”生成“、”持有“、”释放“三个词，而在Object-C内存管理中，还应该加上”废弃“一词。各个词表示的Object-C方法表如下：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">right aligned</th>
-<th>Objective-C方法</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">生成并持有对象</td>
-<td>alloc/new/copy/mutableCopy 等方法</td>
-</tr>
-<tr>
-<td style="text-align:left">持有对象</td>
-<td>retain 方法</td>
-</tr>
-<tr>
-<td style="text-align:left">释放对象</td>
-<td>release 方法</td>
-</tr>
-<tr>
-<td style="text-align:left">废弃对象</td>
-<td>dealloc 方法</td>
-</tr>
-</tbody>
-</table>
-<p>这些有关Objective-C内存管理的方法，并没包含在语言中，而是在Cocoa框架中。准确的说由Foundation框架类库的NSObject类负责内存管理职责。以下将对表格进行简单说明</p>
-<h1 id="自己生成的对象，自己持有"><a href="#自己生成的对象，自己持有" class="headerlink" title="自己生成的对象，自己持有"></a>自己生成的对象，自己持有</h1><p>使用以下名称开头的方法名意味着自己生成的对象只有自己持有：</p>
-<ul>
-<li><p>alloc</p>
-</li>
-<li><p>new</p>
-</li>
-<li><p>copy</p>
-</li>
-<li><p>mutableCopy</p>
-</li>
-</ul>
-<p>只要符合上述<strong>以什么开头</strong>的规则，且方法名满足<strong>驼峰命名</strong>要求，那么它们生成的对象也会被自己持有，比如：allocMyObject，newThatObject， copyThis，mutableCopyThat。相反，如果不符合驼峰命名，比如：allocate，newer，copying等方法所产生的对象则不会自己持有。</p>
-<h1 id="非自己生成的对象，自己也能持有"><a href="#非自己生成的对象，自己也能持有" class="headerlink" title="非自己生成的对象，自己也能持有"></a>非自己生成的对象，自己也能持有</h1><p>默认情况下，使用alloc/new/copy/mutableCopy以外的方法取得的对象，因为非自己生成，所以自己不是该对象的持有者。使用retain方法可以持有该对象：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">//取得非（自己生成并持有）的对象，取得了对象的存在，但并不持有该对象</div><div class="line">id obj = [NSMutableArray array];</div><div class="line">//自己持有该对象</div><div class="line">[obj retain];</div></pre></td></tr></table></figure>
-<p>通过retain方法，非自己生成的对象跟用alloc/new/copy/mutableCopy方法生成的对象一样，成为自己持有的了。</p>
-<h1 id="不在需要自己持有的对象时释放"><a href="#不在需要自己持有的对象时释放" class="headerlink" title="不在需要自己持有的对象时释放"></a>不在需要自己持有的对象时释放</h1><p>自己持有的对象，当不再需要时，必须自己进行释放。释放使用release方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">//自己生成并持有对象</div><div class="line">id obj = [[NSObject alloc] init];</div><div class="line">//释放对象</div><div class="line">[obj release];</div><div class="line">//此时，指向对象的指针仍然保留在变量中，但对象一经释放，就绝对不能再访问</div></pre></td></tr></table></figure>
-<p>如此，由自己生成并持有的对象就释放了。对于非自己生成并持有的对象，如果使用retain方法变为自己持有，那么自己也得负责释放。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//取得非（自己生成并持有）的对象，取得了对象的存在，但并不持有该对象</div><div class="line">id obj = [NSMutableArray array];</div><div class="line">//自己持有该对象</div><div class="line">[obj retain];</div><div class="line">//释放对象</div><div class="line">[obj release];</div></pre></td></tr></table></figure>
-<p>思考一下，NSMutableArray类的array方法，因为它不是以alloc/new/copy/mutableCopy等名称开头，所以它不会持有生成的对象，但是它内部肯定调用了alloc来生成对象，从而取得了对象的存在。这是怎么实现的呢？？</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">+ (id)array</div><div class="line">&#123;</div><div class="line">    //生成并自己持有对象</div><div class="line">    id obj = [[NSMutableArray alloc] init];</div><div class="line">    //取得对象的存在，但不再持有对象</div><div class="line">    [obj autorelease];</div><div class="line">    //如果没有调用autorelease方法，而是直接返回，那么obj没有调用release方法，所以没有被释放，外部调用方</div><div class="line">    //因为方法名为object，所以调用方并不会持有返回对象，从而也不会释放它，因此就会造成内存泄露</div><div class="line">    return obj;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//取得对象存在，但不持有该对象</div><div class="line">id obj = [obj0 object];</div></pre></td></tr></table></figure>
-<p>通过<strong>autorelease</strong>方法，我们可以取得对象的存在，但却不持有该对象。同时，autorelease方法使得对象在超出指定的生存范围时能够自动并正确的释放。<br>当然，也能够通过retain方法将调用autorelease方法取得的对象变为自己持有。</p>
-<h1 id="无法释放非自己持有的对象"><a href="#无法释放非自己持有的对象" class="headerlink" title="无法释放非自己持有的对象"></a>无法释放非自己持有的对象</h1><p>对于alloc/new/copy/mutableCopy方法生成并持有的对象，或是用retain方法持有的对象，持有者在不需要该对象的时候，有义务对其进行释放。而由此以外得到的对象，绝对不能释放。如果释放了非自己持有的对象，会Crash，Crash，Crash！！</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">id obj1 = [[NSObject alloc] init];</div><div class="line">//自己持有的对象，自己进行释放</div><div class="line">[obj1 release];</div><div class="line"></div><div class="line">id obj2 = [obj0 object];</div><div class="line">//非自己持有的对象，进行释放，后果Crash...</div><div class="line">[obj2 release];</div></pre></td></tr></table></figure>
-<p>以上四项内容就是引用计数的思考方式，接下来会介绍在ARC下，这些规则会有哪些变化。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li>《Objective-C高级编程——iOS与OS X多线程和内存管理》</li>
-</ol>
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Core Foundation框架，是一组由C语言编写的接口，它所使用的对象，称之为Core Foundation对象，也是使用引用计数。CF对象与OC对象的区别很小，且可以混合使用。Foundation框架的API生成的对象，可以用Core Foundataion框架的API释放，反之亦然。</p>
+<h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1><p>Core Foundation框架提供了一下几个函数来进行内存管理，<strong>CFBridgingRetain</strong>，<strong>CFBridgingRelease</strong>。这两个函数分别和<strong>__bridge_retain</strong>，<strong>__bridge_release</strong>等价。另外，CF框架还提供了一个函数，来查看对象的引用计数，即：<strong>CFGetRetainCount</strong>。下面分别举例说明这几个函数的用法及内存管理情况：</p>
+<h2 id="bridge"><a href="#bridge" class="headerlink" title="__bridge"></a>__bridge</h2><p>以下代码，将OC对象与void*指针进行相互转换。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">void *p;</div><div class="line">&#123;</div><div class="line">  id obj = [[NSObject alloc] init];</div><div class="line">  p = (__bridge void *)obj;			//id对象转换成void*指针</div><div class="line">  id op = (__bridge id)p;			//void*指针转换成id对象</div><div class="line">&#125;</div><div class="line">//这行代码会崩溃，因为指针指向的对象已经释放，即指针是野指针了</div><div class="line">id obj = (__bridge id)p;</div></pre></td></tr></table></figure>
+<p>转换为void *的__bridge转换，其安全性与赋值给__unsafe_unretained修饰符相近，如果不注意赋值对象的所有者，就会因悬挂指针而导致程序崩溃。</p>
+<h2 id="bridge-retained"><a href="#bridge-retained" class="headerlink" title="__bridge_retained"></a>__bridge_retained</h2><p>__bridge<em>retained主要是将OC对象转换为CF对象。它和CFBridgingRetain等价，\</em>_bridge_retained转换，可使要转换赋值的变量也持有所赋值的对象。下面通过代码说明对象内存的管理情况：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">CFMutableArrayRef cfObject = NULL;</div><div class="line">&#123;</div><div class="line">  	id obj = [[NSMutableArray alloc] init];</div><div class="line">    //cfobject也持有对象，引用+1</div><div class="line">  	cfobject = CFBridgingRetain(obj);		</div><div class="line">  	//该代码和下行转换代码等价</div><div class="line">  	//cfobject = (__bridge_retained CFTypeRef)obj;</div><div class="line">  	printf(&quot;retain count = %ld\n&quot;, CFGetRetainCount(cfobj));</div><div class="line">&#125;</div><div class="line">printf(&quot;retain count after the scope = %ld\n&quot;, CFGetRetainCount(cfobj));</div><div class="line">CFRelease(cfobject);</div></pre></td></tr></table></figure>
+<p>代码运行结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">retain count = 2</div><div class="line">retain count after the scope = 1</div></pre></td></tr></table></figure>
+<p>可以看出，通过__bridge_retained转换，对象的引用计数加1了，而且，如果不调用CFRelease进行释放的话，会造成内存泄露。可以看出，Foundation框架的API生成的OC对象，可以作为Core Foundation对象来使用，也可以通过CFRelease来释放。</p>
+<p>那如果使用__bridge代替__bridge_retained，会是什么情况呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">CFMutableArrayRef cfObject = NULL;</div><div class="line">&#123;</div><div class="line">  	id obj = [[NSMutableArray alloc] init];</div><div class="line">  	//cfobject并不持有对象</div><div class="line">  	cfobject = (__bridge CFTypeRef)obj;</div><div class="line">  	printf(&quot;retain count = %ld\n&quot;, CFGetRetainCount(cfobj));</div><div class="line">&#125;</div><div class="line">printf(&quot;retain count after the scope = %ld\n&quot;, CFGetRetainCount(cfobj));</div><div class="line">CFRelease(cfobject);</div></pre></td></tr></table></figure>
+<p>结果输出：retain count = 1，并在第二个打印语句那崩溃。为什么呢？因为前面说过，__bridge转换并不会改变对象的持有状况，所以引用计数还是1。且超出作用域之后，cfobject就变为野指针。访问野指针造成程序崩溃。</p>
+<h2 id="bridge-transfer"><a href="#bridge-transfer" class="headerlink" title="__bridge_transfer"></a>__bridge_transfer</h2><p>与__bridge<em>retained相反，\</em>_bridge_transfer将CF对象转换成OC对象。并且，被转换的变量，它所持有的对象，在它被赋值给转换目标后随之释放。看以下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	CFMutableArrayRef cfobj = CFArrayCreateMutable(kCFAllocatorDefault, 0, NULL);</div><div class="line">  	printf(&quot;retain count = %ld\n&quot;, CFGetRetainCount(cfobj));</div><div class="line">  	id obj = CFBridgingRelease(cfobj);</div><div class="line">  	//这个转换和以下转换等价：</div><div class="line">	//id obj = (__bridge_transfer id)cfobj;</div><div class="line">  	//注意，虽然cfobj不再持有对象的引用，但是指针还是有效的，还是其正常作用域范围</div><div class="line">  	printf(&quot;retain count after the cast = %ld\n&quot;, CFGetRetainCount(cfobj));    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>输出结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">retain count = 1</div><div class="line">retain count after the cast = 1</div></pre></td></tr></table></figure>
+<p>经过__bridge<em>transfer转换，对象的引用计数没有改变，且CF框架创建的对象cfobj，并没有调用CFRelease进行释放，这是因为经过\</em>_bridge_transfer转换后，cfobj不再持有对象的引用，故而不需要进行释放。但obj持有对象引用，它的释放是有ARC自动进行的。</p>
+<p>同样，如果用__bridge来代替__bridge_transfer，将会是什么情况呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  	CFMutableArrayRef cfobj = CFArrayCreateMutable(kCFAllocatorDefault, 0, NULL);</div><div class="line">  	printf(&quot;retain count = %ld\n&quot;, CFGetRetainCount(cfobj));</div><div class="line">	id obj = (__bridge id)cfobj;</div><div class="line">  	printf(&quot;retain count after the cast = %ld\n&quot;, CFGetRetainCount(cfobj));    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>输出结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">retain count = 1</div><div class="line">retain count after the cast = 2</div></pre></td></tr></table></figure>
+<p>为什么引用计数加1了？因为id obj = (_<em>bridge id)cfobj;其实和 id \</em>_strong obj = (__bridge id)cfobj等价。所以obj会持有对象的强引用，从而引用计数加1。到{}结束时，OC对象obj超出作用域，其强引用失效，对象引用计数减一。但是，cfobj对象还持有引用，它也没有调用CFRelease进行释放，对象的引用计数还为1，从而造成内存泄露。</p>
+<p>所以，在将CF对象通过__bridge转换成OC对象时，一定要注意对象的释放问题。</p>
 
       
     </div>
@@ -444,15 +400,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/07/08/iOS内存管理（二）/" rel="next" title="iOS内存管理（二）">
+                <i class="fa fa-chevron-left"></i> iOS内存管理（二）
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/07/08/iOS内存管理（二）/" rel="prev" title="iOS内存管理（二）">
-                iOS内存管理（二） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -563,7 +519,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#引用计数"><span class="nav-number">2.</span> <span class="nav-text">引用计数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自己生成的对象，自己持有"><span class="nav-number">3.</span> <span class="nav-text">自己生成的对象，自己持有</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#非自己生成的对象，自己也能持有"><span class="nav-number">4.</span> <span class="nav-text">非自己生成的对象，自己也能持有</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#不在需要自己持有的对象时释放"><span class="nav-number">5.</span> <span class="nav-text">不在需要自己持有的对象时释放</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#无法释放非自己持有的对象"><span class="nav-number">6.</span> <span class="nav-text">无法释放非自己持有的对象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内存管理"><span class="nav-number">2.</span> <span class="nav-text">内存管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#bridge"><span class="nav-number">2.1.</span> <span class="nav-text">__bridge</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bridge-retained"><span class="nav-number">2.2.</span> <span class="nav-text">__bridge_retained</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bridge-transfer"><span class="nav-number">2.3.</span> <span class="nav-text">__bridge_transfer</span></a></li></ol></li></ol></div>
             
 
           </div>
