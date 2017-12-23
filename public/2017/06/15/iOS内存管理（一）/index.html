@@ -1,0 +1,863 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="前言这两篇博文是阅读《iOS与OS X多线程和内存管理》之后整理得来的，有错误之处，请指正！ 引用计数顾名思义，引用计数是指内存管理中对引用采用计数的技术。 对于引用计数，我们很自然的联想到“某处有某物多少多少”而将注意力放在计数上。但更客观、正确的思考方式是：  自己生成的对象，自己持有  非自己生成的对象，自己也能持有  不再需要自己持有的对象时自己释放  非自己持有的对象无法释放   上面出">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS内存管理（一）">
+<meta property="og:url" content="http://yoursite.com/2017/06/15/iOS内存管理（一）/index.html">
+<meta property="og:site_name" content="浮生若梦">
+<meta property="og:description" content="前言这两篇博文是阅读《iOS与OS X多线程和内存管理》之后整理得来的，有错误之处，请指正！ 引用计数顾名思义，引用计数是指内存管理中对引用采用计数的技术。 对于引用计数，我们很自然的联想到“某处有某物多少多少”而将注意力放在计数上。但更客观、正确的思考方式是：  自己生成的对象，自己持有  非自己生成的对象，自己也能持有  不再需要自己持有的对象时自己释放  非自己持有的对象无法释放   上面出">
+<meta property="og:updated_time" content="2017-07-18T06:45:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS内存管理（一）">
+<meta name="twitter:description" content="前言这两篇博文是阅读《iOS与OS X多线程和内存管理》之后整理得来的，有错误之处，请指正！ 引用计数顾名思义，引用计数是指内存管理中对引用采用计数的技术。 对于引用计数，我们很自然的联想到“某处有某物多少多少”而将注意力放在计数上。但更客观、正确的思考方式是：  自己生成的对象，自己持有  非自己生成的对象，自己也能持有  不再需要自己持有的对象时自己释放  非自己持有的对象无法释放   上面出">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/15/iOS内存管理（一）/"/>
+
+
+
+
+
+  <title>iOS内存管理（一） | 浮生若梦</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">浮生若梦</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/15/iOS内存管理（一）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="浮生若梦">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="浮生若梦">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS内存管理（一）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-15T16:43:18+08:00">
+                2017-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/06/15/iOS内存管理（一）/" class="leancloud_visitors" data-flag-title="iOS内存管理（一）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这两篇博文是阅读《iOS与OS X多线程和内存管理》之后整理得来的，有错误之处，请指正！</p>
+<h1 id="引用计数"><a href="#引用计数" class="headerlink" title="引用计数"></a>引用计数</h1><p>顾名思义，引用计数是指内存管理中对引用采用计数的技术。 对于引用计数，我们很自然的联想到“某处有某物多少多少”而将注意力放在计数上。但更客观、正确的思考方式是：</p>
+<ol>
+<li><p>自己生成的对象，自己持有</p>
+</li>
+<li><p>非自己生成的对象，自己也能持有</p>
+</li>
+<li><p>不再需要自己持有的对象时自己释放</p>
+</li>
+<li><p>非自己持有的对象无法释放</p>
+</li>
+</ol>
+<p>上面出现了”生成“、”持有“、”释放“三个词，而在Object-C内存管理中，还应该加上”废弃“一词。各个词表示的Object-C方法表如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">right aligned</th>
+<th>Objective-C方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">生成并持有对象</td>
+<td>alloc/new/copy/mutableCopy 等方法</td>
+</tr>
+<tr>
+<td style="text-align:left">持有对象</td>
+<td>retain 方法</td>
+</tr>
+<tr>
+<td style="text-align:left">释放对象</td>
+<td>release 方法</td>
+</tr>
+<tr>
+<td style="text-align:left">废弃对象</td>
+<td>dealloc 方法</td>
+</tr>
+</tbody>
+</table>
+<p>这些有关Objective-C内存管理的方法，并没包含在语言中，而是在Cocoa框架中。准确的说由Foundation框架类库的NSObject类负责内存管理职责。以下将对表格进行简单说明</p>
+<h1 id="自己生成的对象，自己持有"><a href="#自己生成的对象，自己持有" class="headerlink" title="自己生成的对象，自己持有"></a>自己生成的对象，自己持有</h1><p>使用以下名称开头的方法名意味着自己生成的对象只有自己持有：</p>
+<ul>
+<li><p>alloc</p>
+</li>
+<li><p>new</p>
+</li>
+<li><p>copy</p>
+</li>
+<li><p>mutableCopy</p>
+</li>
+</ul>
+<p>只要符合上述<strong>以什么开头</strong>的规则，且方法名满足<strong>驼峰命名</strong>要求，那么它们生成的对象也会被自己持有，比如：allocMyObject，newThatObject， copyThis，mutableCopyThat。相反，如果不符合驼峰命名，比如：allocate，newer，copying等方法所产生的对象则不会自己持有。</p>
+<h1 id="非自己生成的对象，自己也能持有"><a href="#非自己生成的对象，自己也能持有" class="headerlink" title="非自己生成的对象，自己也能持有"></a>非自己生成的对象，自己也能持有</h1><p>默认情况下，使用alloc/new/copy/mutableCopy以外的方法取得的对象，因为非自己生成，所以自己不是该对象的持有者。使用retain方法可以持有该对象：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">//取得非（自己生成并持有）的对象，取得了对象的存在，但并不持有该对象</div><div class="line">id obj = [NSMutableArray array];</div><div class="line">//自己持有该对象</div><div class="line">[obj retain];</div></pre></td></tr></table></figure>
+<p>通过retain方法，非自己生成的对象跟用alloc/new/copy/mutableCopy方法生成的对象一样，成为自己持有的了。</p>
+<h1 id="不在需要自己持有的对象时释放"><a href="#不在需要自己持有的对象时释放" class="headerlink" title="不在需要自己持有的对象时释放"></a>不在需要自己持有的对象时释放</h1><p>自己持有的对象，当不再需要时，必须自己进行释放。释放使用release方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">//自己生成并持有对象</div><div class="line">id obj = [[NSObject alloc] init];</div><div class="line">//释放对象</div><div class="line">[obj release];</div><div class="line">//此时，指向对象的指针仍然保留在变量中，但对象一经释放，就绝对不能再访问</div></pre></td></tr></table></figure>
+<p>如此，由自己生成并持有的对象就释放了。对于非自己生成并持有的对象，如果使用retain方法变为自己持有，那么自己也得负责释放。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//取得非（自己生成并持有）的对象，取得了对象的存在，但并不持有该对象</div><div class="line">id obj = [NSMutableArray array];</div><div class="line">//自己持有该对象</div><div class="line">[obj retain];</div><div class="line">//释放对象</div><div class="line">[obj release];</div></pre></td></tr></table></figure>
+<p>思考一下，NSMutableArray类的array方法，因为它不是以alloc/new/copy/mutableCopy等名称开头，所以它不会持有生成的对象，但是它内部肯定调用了alloc来生成对象，从而取得了对象的存在。这是怎么实现的呢？？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">+ (id)array</div><div class="line">&#123;</div><div class="line">    //生成并自己持有对象</div><div class="line">    id obj = [[NSMutableArray alloc] init];</div><div class="line">    //取得对象的存在，但不再持有对象</div><div class="line">    [obj autorelease];</div><div class="line">    //如果没有调用autorelease方法，而是直接返回，那么obj没有调用release方法，所以没有被释放，外部调用方</div><div class="line">    //因为方法名为object，所以调用方并不会持有返回对象，从而也不会释放它，因此就会造成内存泄露</div><div class="line">    return obj;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//取得对象存在，但不持有该对象</div><div class="line">id obj = [obj0 object];</div></pre></td></tr></table></figure>
+<p>通过<strong>autorelease</strong>方法，我们可以取得对象的存在，但却不持有该对象。同时，autorelease方法使得对象在超出指定的生存范围时能够自动并正确的释放。<br>当然，也能够通过retain方法将调用autorelease方法取得的对象变为自己持有。</p>
+<h1 id="无法释放非自己持有的对象"><a href="#无法释放非自己持有的对象" class="headerlink" title="无法释放非自己持有的对象"></a>无法释放非自己持有的对象</h1><p>对于alloc/new/copy/mutableCopy方法生成并持有的对象，或是用retain方法持有的对象，持有者在不需要该对象的时候，有义务对其进行释放。而由此以外得到的对象，绝对不能释放。如果释放了非自己持有的对象，会Crash，Crash，Crash！！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">id obj1 = [[NSObject alloc] init];</div><div class="line">//自己持有的对象，自己进行释放</div><div class="line">[obj1 release];</div><div class="line"></div><div class="line">id obj2 = [obj0 object];</div><div class="line">//非自己持有的对象，进行释放，后果Crash...</div><div class="line">[obj2 release];</div></pre></td></tr></table></figure>
+<p>以上四项内容就是引用计数的思考方式，接下来会介绍在ARC下，这些规则会有哪些变化。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li>《Objective-C高级编程——iOS与OS X多线程和内存管理》</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/08/iOS内存管理（二）/" rel="prev" title="iOS内存管理（二）">
+                iOS内存管理（二） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="浮生若梦" />
+          <p class="site-author-name" itemprop="name">浮生若梦</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#引用计数"><span class="nav-number">2.</span> <span class="nav-text">引用计数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自己生成的对象，自己持有"><span class="nav-number">3.</span> <span class="nav-text">自己生成的对象，自己持有</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#非自己生成的对象，自己也能持有"><span class="nav-number">4.</span> <span class="nav-text">非自己生成的对象，自己也能持有</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#不在需要自己持有的对象时释放"><span class="nav-number">5.</span> <span class="nav-text">不在需要自己持有的对象时释放</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#无法释放非自己持有的对象"><span class="nav-number">6.</span> <span class="nav-text">无法释放非自己持有的对象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">浮生若梦</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("ER1WqqqiRkb5OESscBlpnDQn-gzGzoHsz", "mcK1Mwxg2tWp1IpifikaLgde");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
