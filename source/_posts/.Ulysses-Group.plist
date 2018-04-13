@@ -2,21 +2,19 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>order</key>
-	<array/>
 	<key>resolutionData</key>
 	<dict>
-		<key>order</key>
+		<key>sheetClusters</key>
 		<dict/>
 	</dict>
+	<key>sheetClusters</key>
+	<array/>
 	<key>storeFormatVersion</key>
 	<integer>1</integer>
 	<key>versioning</key>
 	<dict>
-		<key>order</key>
+		<key>sheetClusters</key>
 		<dict>
-			<key>b9d4c3a4d74ff1bac5381d13a849227cd2815eeadc550a3aaa653bc05fb7a535</key>
-			<integer>1</integer>
 			<key>d2e3f73a323a94ba3f814b749ff6eae2c57afec64ba5c919ef0bcc92d0da277c</key>
 			<integer>1</integer>
 		</dict>
