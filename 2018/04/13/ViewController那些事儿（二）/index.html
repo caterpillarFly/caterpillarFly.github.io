@@ -93,16 +93,18 @@
 
 
 
-<meta name="description" content="简介Core Foundation框架，是一组由C语言编写的接口，它所使用的对象，称之为Core Foundation对象，也是使用引用计数。CF对象与OC对象的区别很小，且可以混合使用。Foundation框架的API生成的对象，可以用Core Foundataion框架的API释放，反之亦然。 内存管理Core Foundation框架提供了一下几个函数来进行内存管理，CFBridgingRe">
+<meta name="description" content="view的状态[上篇][1]文章提到了ViewController两个指定初始化方法 12- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil;- (nullable instancetype)initWithCoder:(NSCode">
 <meta property="og:type" content="article">
-<meta property="og:title" content="OC对象和Core Foundation对象间的转换">
-<meta property="og:url" content="http://yoursite.com/2017/07/18/OC对象和非OC对象间的转换/index.html">
+<meta property="og:title" content="ViewController那些事儿（二）">
+<meta property="og:url" content="http://yoursite.com/2018/04/13/ViewController那些事儿（二）/index.html">
 <meta property="og:site_name" content="浮生若梦">
-<meta property="og:description" content="简介Core Foundation框架，是一组由C语言编写的接口，它所使用的对象，称之为Core Foundation对象，也是使用引用计数。CF对象与OC对象的区别很小，且可以混合使用。Foundation框架的API生成的对象，可以用Core Foundataion框架的API释放，反之亦然。 内存管理Core Foundation框架提供了一下几个函数来进行内存管理，CFBridgingRe">
-<meta property="og:updated_time" content="2017-12-23T08:28:32.000Z">
+<meta property="og:description" content="view的状态[上篇][1]文章提到了ViewController两个指定初始化方法 12- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil;- (nullable instancetype)initWithCoder:(NSCode">
+<meta property="og:image" content="https://github.com/caterpillarFly/blogImages/blob/master/MGAlertViewControllerCrash.png?raw=true">
+<meta property="og:updated_time" content="2018-04-13T09:59:34.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="OC对象和Core Foundation对象间的转换">
-<meta name="twitter:description" content="简介Core Foundation框架，是一组由C语言编写的接口，它所使用的对象，称之为Core Foundation对象，也是使用引用计数。CF对象与OC对象的区别很小，且可以混合使用。Foundation框架的API生成的对象，可以用Core Foundataion框架的API释放，反之亦然。 内存管理Core Foundation框架提供了一下几个函数来进行内存管理，CFBridgingRe">
+<meta name="twitter:title" content="ViewController那些事儿（二）">
+<meta name="twitter:description" content="view的状态[上篇][1]文章提到了ViewController两个指定初始化方法 12- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil;- (nullable instancetype)initWithCoder:(NSCode">
+<meta name="twitter:image" content="https://github.com/caterpillarFly/blogImages/blob/master/MGAlertViewControllerCrash.png?raw=true">
 
 
 
@@ -130,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/07/18/OC对象和非OC对象间的转换/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/04/13/ViewController那些事儿（二）/"/>
 
 
 
 
 
-  <title>OC对象和Core Foundation对象间的转换 | 浮生若梦</title>
+  <title>ViewController那些事儿（二） | 浮生若梦</title>
   
 
 
@@ -265,7 +267,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/18/OC对象和非OC对象间的转换/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/13/ViewController那些事儿（二）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="浮生若梦">
@@ -282,7 +284,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">OC对象和Core Foundation对象间的转换</h1>
+          <h1 class="post-title" itemprop="name headline">ViewController那些事儿（二）</h1>
         
 
         <div class="post-meta">
@@ -294,8 +296,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-18T19:47:05+08:00">
-                2017-07-18
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-13T17:04:38+08:00">
+                2018-04-13
               </time>
             
 
@@ -312,7 +314,7 @@
 
           
           
-             <span id="/2017/07/18/OC对象和非OC对象间的转换/" class="leancloud_visitors" data-flag-title="OC对象和Core Foundation对象间的转换">
+             <span id="/2018/04/13/ViewController那些事儿（二）/" class="leancloud_visitors" data-flag-title="ViewController那些事儿（二）">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -340,30 +342,31 @@
       
 
       
-        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Core Foundation框架，是一组由C语言编写的接口，它所使用的对象，称之为Core Foundation对象，也是使用引用计数。CF对象与OC对象的区别很小，且可以混合使用。Foundation框架的API生成的对象，可以用Core Foundataion框架的API释放，反之亦然。</p>
-<h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1><p>Core Foundation框架提供了一下几个函数来进行内存管理，<strong>CFBridgingRetain</strong>，<strong>CFBridgingRelease</strong>。这两个函数分别和<strong>__bridge_retain</strong>，<strong>__bridge_release</strong>等价。另外，CF框架还提供了一个函数，来查看对象的引用计数，即：<strong>CFGetRetainCount</strong>。下面分别举例说明这几个函数的用法及内存管理情况：</p>
-<h2 id="bridge"><a href="#bridge" class="headerlink" title="__bridge"></a>__bridge</h2><p>以下代码，将OC对象与void*指针进行相互转换。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">void *p;</div><div class="line">&#123;</div><div class="line">  id obj = [[NSObject alloc] init];</div><div class="line">  p = (__bridge void *)obj;         //id对象转换成void*指针</div><div class="line">  id op = (__bridge id)p;           //void*指针转换成id对象</div><div class="line">&#125;</div><div class="line">//这行代码会崩溃，因为指针指向的对象已经释放，即指针是野指针了</div><div class="line">id obj = (__bridge id)p;</div></pre></td></tr></table></figure>
-<p>转换为void *的__bridge转换，其安全性与赋值给__unsafe_unretained修饰符相近，如果不注意赋值对象的所有者，就会因悬挂指针而导致程序崩溃。</p>
-<h2 id="bridge-retained"><a href="#bridge-retained" class="headerlink" title="__bridge_retained"></a>__bridge_retained</h2><p>__bridge_retained主要是将OC对象转换为CF对象。它和CFBridgingRetain等价，__bridge_retained转换，可使要转换赋值的变量也持有所赋值的对象。下面通过代码说明对象内存的管理情况：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">CFMutableArrayRef cfObject = NULL;</div><div class="line">&#123;</div><div class="line">    id obj = [[NSMutableArray alloc] init];</div><div class="line">    //cfobject也持有对象，引用+1</div><div class="line">    cfobject = CFBridgingRetain(obj);       </div><div class="line">    //该代码和下行转换代码等价</div><div class="line">    //cfobject = (__bridge_retained CFTypeRef)obj;</div><div class="line">    printf(&quot;retain count = %ld\n&quot;, CFGetRetainCount(cfobj));</div><div class="line">&#125;</div><div class="line">printf(&quot;retain count after the scope = %ld\n&quot;, CFGetRetainCount(cfobj));</div><div class="line">CFRelease(cfobject);</div></pre></td></tr></table></figure>
-<p>代码运行结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">retain count = 2</div><div class="line">retain count after the scope = 1</div></pre></td></tr></table></figure>
-<p>可以看出，通过__bridge_retained转换，对象的引用计数加1了，而且，如果不调用CFRelease进行释放的话，会造成内存泄露。可以看出，Foundation框架的API生成的OC对象，可以作为Core Foundation对象来使用，也可以通过CFRelease来释放。</p>
-<p>那如果使用__bridge代替__bridge_retained，会是什么情况呢？</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">CFMutableArrayRef cfObject = NULL;</div><div class="line">&#123;</div><div class="line">    id obj = [[NSMutableArray alloc] init];</div><div class="line">    //cfobject并不持有对象</div><div class="line">    cfobject = (__bridge CFTypeRef)obj;</div><div class="line">    printf(&quot;retain count = %ld\n&quot;, CFGetRetainCount(cfobj));</div><div class="line">&#125;</div><div class="line">printf(&quot;retain count after the scope = %ld\n&quot;, CFGetRetainCount(cfobj));</div><div class="line">CFRelease(cfobject);</div></pre></td></tr></table></figure>
-<p>结果输出：retain count = 1，并在第二个打印语句那崩溃。为什么呢？因为前面说过，__bridge转换并不会改变对象的持有状况，所以引用计数还是1。且超出作用域之后，cfobject就变为野指针。访问野指针造成程序崩溃。</p>
-<h2 id="bridge-transfer"><a href="#bridge-transfer" class="headerlink" title="__bridge_transfer"></a>__bridge_transfer</h2><p>与__bridge_retained相反，__bridge_transfer将CF对象转换成OC对象。并且，被转换的变量，它所持有的对象，在它被赋值给转换目标后随之释放。看以下代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    CFMutableArrayRef cfobj = CFArrayCreateMutable(kCFAllocatorDefault, 0, NULL);</div><div class="line">    printf(&quot;retain count = %ld\n&quot;, CFGetRetainCount(cfobj));</div><div class="line">    id obj = CFBridgingRelease(cfobj);</div><div class="line">    //这个转换和以下转换等价：</div><div class="line">    //id obj = (__bridge_transfer id)cfobj;</div><div class="line">    //注意，虽然cfobj不再持有对象的引用，但是指针还是有效的，还是其正常作用域范围</div><div class="line">    printf(&quot;retain count after the cast = %ld\n&quot;, CFGetRetainCount(cfobj));    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>输出结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">retain count = 1</div><div class="line">retain count after the cast = 1</div></pre></td></tr></table></figure>
-<p>经过__bridge_transfer转换，对象的引用计数没有改变，且CF框架创建的对象cfobj，并没有调用CFRelease进行释放，这是因为经过__bridge_transfer转换后，cfobj不再持有对象的引用，故而不需要进行释放。但obj持有对象引用，它的释放是有ARC自动进行的。</p>
-<p>同样，如果用__bridge来代替__bridge_transfer，将会是什么情况呢？</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    CFMutableArrayRef cfobj = CFArrayCreateMutable(kCFAllocatorDefault, 0, NULL);</div><div class="line">    printf(&quot;retain count = %ld\n&quot;, CFGetRetainCount(cfobj));</div><div class="line">    id obj = (__bridge id)cfobj;</div><div class="line">    printf(&quot;retain count after the cast = %ld\n&quot;, CFGetRetainCount(cfobj));    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>输出结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">retain count = 1</div><div class="line">retain count after the cast = 2</div></pre></td></tr></table></figure>
-<p>为什么引用计数加1了？因为id obj = (__bridge id)cfobj;其实和 id __strong obj = (__bridge id)cfobj等价。所以obj会持有对象的强引用，从而引用计数加1。到{}结束时，OC对象obj超出作用域，其强引用失效，对象引用计数减一。但是，cfobj对象还持有引用，它也没有调用CFRelease进行释放，对象的引用计数还为1，从而造成内存泄露。</p>
-<p>所以，在将CF对象通过__bridge转换成OC对象时，一定要注意对象的释放问题。</p>
+        <h1 id="view的状态"><a href="#view的状态" class="headerlink" title="view的状态"></a>view的状态</h1><p>[上篇][1]文章提到了ViewController两个指定初始化方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil;</div><div class="line">- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder;</div></pre></td></tr></table></figure>
+<p>那当VC分别用这两个方法完成初始化后，View是什么状态呢？已初始化还是未初始化？这得分情况：</p>
+<p>当VC是通过Xib文件初始化时，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">TestXibViewController *vc = (TestXibViewController *)[[[NSBundle mainBundle] loadNibNamed:@&quot;TestXibViewController&quot; owner:nil options:nil] firstObject];</div><div class="line">//[self.navigationController pushViewController:vc animated:YES];</div></pre></td></tr></table></figure>
+<p><strong>loadNibNamed:owner:options:</strong>方法结束后，View就已经被初始化好，且所有的<strong>outlets/actions</strong>已经设置好。</p>
+<p>上篇文章提到，从UIStoryboard初始化的VC，关联过程和这不太一样。那从UIStoryboard初始化的VC，View处于什么状态呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">UIStoryboard *storybaord = [UIStoryboard storyboardWithName:@&quot;StoryboardVC&quot; bundle:nil];</div><div class="line">StoryboardVC *vc = [storybaord instantiateInitialViewController];</div><div class="line">//[self.navigationController pushViewController:vc animated:YES];</div></pre></td></tr></table></figure>
+<p>UIStoryboard和UINib的处理方式不一样，虽然都是调用的<strong>initWithCoder:</strong>方法，但是结果却大不一样。</p>
+<p>当调用<strong>instantiateInitialViewController</strong>方法得到VC时，虽然底层也调用了<strong>instantiateWithOwner:options</strong>方法，但是View并没有初始化，所有的<strong>outlets/actions</strong>也未关联。那他们是什么时候关联的呢？</p>
+<p>当通过<strong>initWithNibName:bundle:</strong>方法初始化VC时，Vew也没有初始化，还是处于nil状态。为什么呢，参数里不是有nib文件名称吗？答案是苹果对内存的优化，所以使用延迟加载，<strong>直到开发人员调用self.view</strong>的时候，才会去初始化view。Storyboard也是类似的过程。（事实上，开发人员一般不会初始化完成就调用self.view，通常都是用导航控制器来执行push操作）</p>
+<p>那view是如何初始化的呢？答案是loadView，该方法是VC用来初始化或者说加载view。具体加载过程如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- (void)loadView</div><div class="line">&#123;</div><div class="line">  if (nib)&#123; </div><div class="line">    loadNib;</div><div class="line">  &#125;</div><div class="line">  else&#123;</div><div class="line">    createEmptyView;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>VC初始化时，如果传递了相应的nib参数，就加载指定的nib文件。如果没传，就按照一定的nib文件查找规则进行查找，找到了，那就加载找到的nib文件；没找到，就创建一个空的view。（[[UIVew alloc] init]）</p>
+<h2 id="xib查找规则"><a href="#xib查找规则" class="headerlink" title="xib查找规则"></a>xib查找规则</h2><p>那这个nib文件查找规则是怎样的呢？大多数教程说的都是直接查找与VC同名的nib文件。真是这样的吗？请看下面fabric统计的一个崩溃。</p>
+<p><img src="https://github.com/caterpillarFly/blogImages/blob/master/MGAlertViewControllerCrash.png?raw=true"></p>
+<p>这个崩溃只出现在<strong>iOS8</strong>的系统上。工程里面，存在两个类，<strong>MGAlertViewController</strong>，<strong>MGAlertView</strong>。这两个类都有各自的xib文件，即：MGAlertViewController.xib和MGAlertView.xib。</p>
+<p>代码中对MGAlertViewController的初始化，并没有传递nib名称，直接使用的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[[MGAlertViewController alloc] init]</div></pre></td></tr></table></figure>
+<p>如果按照上述的xib查找规则，那么会找到MGAlertViewController.xib文件，这没有任何问题。</p>
+<p>但是在iOS8的机型上，却找到了MGAlertView.xib文件，当对MGAlertView.xib文件中对象解固完成并进行关联时，没有设置view关联，所以发生了崩溃。</p>
+<p>为什么iOS8和iOS9找到的xib文件不一样呢？只能猜测iOS8和iOS8以上系统的xib查找规则不同。没有找到英文资料说明这一差异，有篇[中文博客][1]，简单讲述了xib的查找规则。</p>
+<p>总结下查找规则：</p>
+<p>以MGAlertViewController为例，如果初始化时没传xib文件名称，那么系统首先会找与控制器名字一样，但是去掉Controller后缀，也就是MGAlertView.xib文件，找到了则使用这个xib文件。如果没找到，就会找与控制器名字一样的xib文件，即MGAlertViewController.xib。</p>
+<p>以上就是View的初始化过程</p>
 
       
     </div>
@@ -400,8 +403,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/07/08/iOS内存管理（二）/" rel="next" title="iOS内存管理（二）">
-                <i class="fa fa-chevron-left"></i> iOS内存管理（二）
+              <a href="/2017/12/10/ViewController那些事儿（一）/" rel="next" title="ViewController那些事儿（一）">
+                <i class="fa fa-chevron-left"></i> ViewController那些事儿（一）
               </a>
             
           </div>
@@ -410,8 +413,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/08/01/图片拉伸问题/" rel="prev" title="图片拉伸问题">
-                图片拉伸问题 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/04/13/ViewController那些事儿（三）/" rel="prev" title="ViewController那些事儿（三）">
+                ViewController那些事儿（三） <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -523,7 +526,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内存管理"><span class="nav-number">2.</span> <span class="nav-text">内存管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#bridge"><span class="nav-number">2.1.</span> <span class="nav-text">__bridge</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bridge-retained"><span class="nav-number">2.2.</span> <span class="nav-text">__bridge_retained</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bridge-transfer"><span class="nav-number">2.3.</span> <span class="nav-text">__bridge_transfer</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#view的状态"><span class="nav-number">1.</span> <span class="nav-text">view的状态</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#xib查找规则"><span class="nav-number">1.1.</span> <span class="nav-text">xib查找规则</span></a></li></ol></li></ol></div>
             
 
           </div>
