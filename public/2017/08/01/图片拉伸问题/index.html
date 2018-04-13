@@ -100,7 +100,7 @@
 <meta property="og:site_name" content="浮生若梦">
 <meta property="og:description" content="苹果给了3个图片拉伸相关的api，分别是： 12345- (UIImage *)stretchableImageWithLeftCapWidth:(NSInteger)leftCapWidth                                            topCapHeight:(NSInteger)topCapHeight;- (UIImage *)resizableI">
 <meta property="og:image" content="http://i1.ciimg.com/1949/69c4a516ff4a6a47.png">
-<meta property="og:updated_time" content="2017-12-10T02:35:01.000Z">
+<meta property="og:updated_time" content="2018-01-23T02:45:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图片拉伸问题">
 <meta name="twitter:description" content="苹果给了3个图片拉伸相关的api，分别是： 12345- (UIImage *)stretchableImageWithLeftCapWidth:(NSInteger)leftCapWidth                                            topCapHeight:(NSInteger)topCapHeight;- (UIImage *)resizableI">
@@ -344,10 +344,10 @@
       
         <p>苹果给了3个图片拉伸相关的api，分别是：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (UIImage *)stretchableImageWithLeftCapWidth:(NSInteger)leftCapWidth           </div><div class="line">                                 topCapHeight:(NSInteger)topCapHeight;</div><div class="line">- (UIImage *)resizableImageWithCapInsets:(UIEdgeInsets)capInsets;</div><div class="line">- (UIImage *)resizableImageWithCapInsets:(UIEdgeInsets)capInsets </div><div class="line">                            resizingMode:(UIImageResizingMode)resizingMode</div></pre></td></tr></table></figure>
-<p>关于这三个方法的含义，拉伸区域等的解释以及用法，请看这篇博客：<a href="http://blog.csdn.net/q199109106q/article/details/8615661" target="_blank" rel="external">iOS图片拉伸技巧</a>，解释得非常清楚，这里不做过多赘述。</p>
+<p>关于这三个方法的含义，拉伸区域等的解释以及用法，请看这篇博客：<a href="http://blog.csdn.net/q199109106q/article/details/8615661" target="_blank" rel="external">iOS图片拉伸技巧</a>，这里不做过多赘述。</p>
 <p>下面说下自己遇到的问题：原始图片如下</p>
 <p><img src="http://i1.ciimg.com/1949/69c4a516ff4a6a47.png" alt=""></p>
-<p>原始图片大小为（138，48），这是2x图，所以理论上UIImageView的大小为：（69，24）即可。现在需要将imageView拉伸到（126，24）以免图片变形，拉伸代码如下：</p>
+<p>UI给的原始图片大小为（138，48），所以理论上UIImageView的大小为：（69，24）即可。现在需要将imageView拉伸到（126，24）以免图片变形，拉伸代码如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">UIImage *image = self.bubbleView.image;</div><div class="line">CGSize imageSize = image.size;</div><div class="line">image = [image stretchableImageWithLeftCapWidth:floorf(imageSize.width*2/3)            </div><div class="line">                                   topCapHeight:floorf(imageSize.height/3)];</div><div class="line">self.bubbleView.image = image;</div></pre></td></tr></table></figure>
 <p>当image是从xcassets里面读取的，即：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.bubbleView.image = [UIImage imageNamed:@&quot;xxx&quot;];</div></pre></td></tr></table></figure>
@@ -470,7 +470,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -516,7 +516,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
