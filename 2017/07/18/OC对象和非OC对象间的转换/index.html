@@ -1,0 +1,823 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="简介Core Foundation框架，是一组由C语言编写的接口，它所使用的对象，称之为Core Foundation对象，也是使用引用计数。CF对象与OC对象的区别很小，且可以混合使用。Foundation框架的API生成的对象，可以用Core Foundataion框架的API释放，反之亦然。 内存管理Core Foundation框架提供了一下几个函数来进行内存管理，CFBridgingRe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OC对象和Core Foundation对象间的转换">
+<meta property="og:url" content="http://yoursite.com/2017/07/18/OC对象和非OC对象间的转换/index.html">
+<meta property="og:site_name" content="浮生若梦">
+<meta property="og:description" content="简介Core Foundation框架，是一组由C语言编写的接口，它所使用的对象，称之为Core Foundation对象，也是使用引用计数。CF对象与OC对象的区别很小，且可以混合使用。Foundation框架的API生成的对象，可以用Core Foundataion框架的API释放，反之亦然。 内存管理Core Foundation框架提供了一下几个函数来进行内存管理，CFBridgingRe">
+<meta property="og:updated_time" content="2017-12-10T02:27:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OC对象和Core Foundation对象间的转换">
+<meta name="twitter:description" content="简介Core Foundation框架，是一组由C语言编写的接口，它所使用的对象，称之为Core Foundation对象，也是使用引用计数。CF对象与OC对象的区别很小，且可以混合使用。Foundation框架的API生成的对象，可以用Core Foundataion框架的API释放，反之亦然。 内存管理Core Foundation框架提供了一下几个函数来进行内存管理，CFBridgingRe">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/18/OC对象和非OC对象间的转换/"/>
+
+
+
+
+
+  <title>OC对象和Core Foundation对象间的转换 | 浮生若梦</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">浮生若梦</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/18/OC对象和非OC对象间的转换/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="浮生若梦">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="浮生若梦">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">OC对象和Core Foundation对象间的转换</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-18T19:47:05+08:00">
+                2017-07-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/07/18/OC对象和非OC对象间的转换/" class="leancloud_visitors" data-flag-title="OC对象和Core Foundation对象间的转换">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Core Foundation框架，是一组由C语言编写的接口，它所使用的对象，称之为Core Foundation对象，也是使用引用计数。CF对象与OC对象的区别很小，且可以混合使用。Foundation框架的API生成的对象，可以用Core Foundataion框架的API释放，反之亦然。</p>
+<h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1><p>Core Foundation框架提供了一下几个函数来进行内存管理，<strong>CFBridgingRetain</strong>，<strong>CFBridgingRelease</strong>。这两个函数分别和<strong>__bridge_retain</strong>，<strong>__bridge_release</strong>等价。另外，CF框架还提供了一个函数，来查看对象的引用计数，即：<strong>CFGetRetainCount</strong>。下面分别举例说明这几个函数的用法及内存管理情况：</p>
+<h2 id="bridge"><a href="#bridge" class="headerlink" title="__bridge"></a>__bridge</h2><p>以下代码，将OC对象与void*指针进行相互转换。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">void *p;</div><div class="line">&#123;</div><div class="line">  id obj = [[NSObject alloc] init];</div><div class="line">  p = (__bridge void *)obj;         //id对象转换成void*指针</div><div class="line">  id op = (__bridge id)p;           //void*指针转换成id对象</div><div class="line">&#125;</div><div class="line">//这行代码会崩溃，因为指针指向的对象已经释放，即指针是野指针了</div><div class="line">id obj = (__bridge id)p;</div></pre></td></tr></table></figure>
+<p>转换为void *的__bridge转换，其安全性与赋值给__unsafe_unretained修饰符相近，如果不注意赋值对象的所有者，就会因悬挂指针而导致程序崩溃。</p>
+<h2 id="bridge-retained"><a href="#bridge-retained" class="headerlink" title="__bridge_retained"></a>__bridge_retained</h2><p>__bridge_retained主要是将OC对象转换为CF对象。它和CFBridgingRetain等价，__bridge_retained转换，可使要转换赋值的变量也持有所赋值的对象。下面通过代码说明对象内存的管理情况：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">CFMutableArrayRef cfObject = NULL;</div><div class="line">&#123;</div><div class="line">    id obj = [[NSMutableArray alloc] init];</div><div class="line">    //cfobject也持有对象，引用+1</div><div class="line">    cfobject = CFBridgingRetain(obj);       </div><div class="line">    //该代码和下行转换代码等价</div><div class="line">    //cfobject = (__bridge_retained CFTypeRef)obj;</div><div class="line">    printf(&quot;retain count = %ld\n&quot;, CFGetRetainCount(cfobj));</div><div class="line">&#125;</div><div class="line">printf(&quot;retain count after the scope = %ld\n&quot;, CFGetRetainCount(cfobj));</div><div class="line">CFRelease(cfobject);</div></pre></td></tr></table></figure>
+<p>代码运行结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">retain count = 2</div><div class="line">retain count after the scope = 1</div></pre></td></tr></table></figure>
+<p>可以看出，通过__bridge_retained转换，对象的引用计数加1了，而且，如果不调用CFRelease进行释放的话，会造成内存泄露。可以看出，Foundation框架的API生成的OC对象，可以作为Core Foundation对象来使用，也可以通过CFRelease来释放。</p>
+<p>那如果使用__bridge代替__bridge_retained，会是什么情况呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">CFMutableArrayRef cfObject = NULL;</div><div class="line">&#123;</div><div class="line">    id obj = [[NSMutableArray alloc] init];</div><div class="line">    //cfobject并不持有对象</div><div class="line">    cfobject = (__bridge CFTypeRef)obj;</div><div class="line">    printf(&quot;retain count = %ld\n&quot;, CFGetRetainCount(cfobj));</div><div class="line">&#125;</div><div class="line">printf(&quot;retain count after the scope = %ld\n&quot;, CFGetRetainCount(cfobj));</div><div class="line">CFRelease(cfobject);</div></pre></td></tr></table></figure>
+<p>结果输出：retain count = 1，并在第二个打印语句那崩溃。为什么呢？因为前面说过，__bridge转换并不会改变对象的持有状况，所以引用计数还是1。且超出作用域之后，cfobject就变为野指针。访问野指针造成程序崩溃。</p>
+<h2 id="bridge-transfer"><a href="#bridge-transfer" class="headerlink" title="__bridge_transfer"></a>__bridge_transfer</h2><p>与__bridge_retained相反，__bridge_transfer将CF对象转换成OC对象。并且，被转换的变量，它所持有的对象，在它被赋值给转换目标后随之释放。看以下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    CFMutableArrayRef cfobj = CFArrayCreateMutable(kCFAllocatorDefault, 0, NULL);</div><div class="line">    printf(&quot;retain count = %ld\n&quot;, CFGetRetainCount(cfobj));</div><div class="line">    id obj = CFBridgingRelease(cfobj);</div><div class="line">    //这个转换和以下转换等价：</div><div class="line">    //id obj = (__bridge_transfer id)cfobj;</div><div class="line">    //注意，虽然cfobj不再持有对象的引用，但是指针还是有效的，还是其正常作用域范围</div><div class="line">    printf(&quot;retain count after the cast = %ld\n&quot;, CFGetRetainCount(cfobj));    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>输出结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">retain count = 1</div><div class="line">retain count after the cast = 1</div></pre></td></tr></table></figure>
+<p>经过__bridge_transfer转换，对象的引用计数没有改变，且CF框架创建的对象cfobj，并没有调用CFRelease进行释放，这是因为经过__bridge_transfer转换后，cfobj不再持有对象的引用，故而不需要进行释放。但obj持有对象引用，它的释放是有ARC自动进行的。</p>
+<p>同样，如果用__bridge来代替__bridge_transfer，将会是什么情况呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    CFMutableArrayRef cfobj = CFArrayCreateMutable(kCFAllocatorDefault, 0, NULL);</div><div class="line">    printf(&quot;retain count = %ld\n&quot;, CFGetRetainCount(cfobj));</div><div class="line">    id obj = (__bridge id)cfobj;</div><div class="line">    printf(&quot;retain count after the cast = %ld\n&quot;, CFGetRetainCount(cfobj));    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>输出结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">retain count = 1</div><div class="line">retain count after the cast = 2</div></pre></td></tr></table></figure>
+<p>为什么引用计数加1了？因为id obj = (__bridge id)cfobj;其实和 id __strong obj = (__bridge id)cfobj等价。所以obj会持有对象的强引用，从而引用计数加1。到{}结束时，OC对象obj超出作用域，其强引用失效，对象引用计数减一。但是，cfobj对象还持有引用，它也没有调用CFRelease进行释放，对象的引用计数还为1，从而造成内存泄露。</p>
+<p>所以，在将CF对象通过__bridge转换成OC对象时，一定要注意对象的释放问题。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/08/iOS内存管理（二）/" rel="next" title="iOS内存管理（二）">
+                <i class="fa fa-chevron-left"></i> iOS内存管理（二）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/01/图片拉伸问题/" rel="prev" title="图片拉伸问题">
+                图片拉伸问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="浮生若梦" />
+          <p class="site-author-name" itemprop="name">浮生若梦</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内存管理"><span class="nav-number">2.</span> <span class="nav-text">内存管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#bridge"><span class="nav-number">2.1.</span> <span class="nav-text">__bridge</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bridge-retained"><span class="nav-number">2.2.</span> <span class="nav-text">__bridge_retained</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bridge-transfer"><span class="nav-number">2.3.</span> <span class="nav-text">__bridge_transfer</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">浮生若梦</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("ER1WqqqiRkb5OESscBlpnDQn-gzGzoHsz", "mcK1Mwxg2tWp1IpifikaLgde");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
